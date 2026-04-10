@@ -127,6 +127,8 @@ This represents the second-stage payload delivery.
 * PowerShell delay: **50 seconds**
 
 The delay is used to evade sandbox and automated detection mechanisms.
+The PowerShell command responsible for the delay was identified and decoded using CyberChef, revealing the use of a timed execution delay technique.
+
 
 ---
 
