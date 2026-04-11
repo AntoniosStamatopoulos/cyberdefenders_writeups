@@ -43,6 +43,3 @@ The exercise simulates a real-world incident response case where a compromised m
 
 This repository is intended for educational purposes only. The materials and techniques demonstrated are used in controlled lab environments for cybersecurity training and research.
 
-## Outcome
-
-By completing this lab, analysts gain practical experience in identifying and analyzing attack patterns and improve their ability to detect and respond to malware incidents.
